@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connectdb"
 import { services } from "@/lib/services"
+import { NextResponse } from "next/server"
 
 export const GET = async () => {
     const db = await connectDB()
@@ -7,8 +8,8 @@ export const GET = async () => {
     try {
         await serviceCollection.deleteMany()
         const resp = await serviceCollection.insertMany(services)
-        return Response.json({ message: 'seeded successfully' })
+        return NextResponse.json({ message: 'seeded successfully' })
     } catch (error) {
-        console.log(error)
+        return NextResponse.json({massage : 'no data found', error})
     }
 }

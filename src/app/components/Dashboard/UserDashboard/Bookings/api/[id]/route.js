@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connectdb"
 import { ObjectId } from "mongodb"
+import { NextResponse } from "next/server"
 
 export const PATCH = async (request, { params }) => {
     const db = await connectDB()
@@ -18,8 +19,8 @@ export const PATCH = async (request, { params }) => {
             }
         )
 
-        return Response.json({ message: 'update found', response: resp })
+        return NextResponse.json({ message: 'update found', response: resp })
     } catch (error) {
-        return Response.json({ message: "No Data Found" })
+        return NextResponse.json({massage : 'no data found', error})
     }
 }

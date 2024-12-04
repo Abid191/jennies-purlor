@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connectdb"
 import { ObjectId } from "mongodb"
+import { NextResponse } from "next/server";
 
 export const PATCH = async (request, { params }) => {
     try {
@@ -9,10 +10,7 @@ export const PATCH = async (request, { params }) => {
 
         // Ensure `params.id` is valid and handle invalid ObjectId errors
         if (!ObjectId.isValid(params.id)) {
-            return new Response(
-                JSON.stringify({ message: 'Invalid ID format' }),
-                { status: 400 }
-            );
+            return NextResponse.json({ message: 'Invalid ID format' }, { status: 400 });
         }
 
         const myUser = await updateCollection.updateOne(
@@ -28,23 +26,13 @@ export const PATCH = async (request, { params }) => {
 
         // Check the update result
         if (myUser.matchedCount === 0 && myUser.upsertedCount === 0) {
-            return new Response(
-                JSON.stringify({ message: 'No matching document found to update' }),
-                { status: 404 }
-            );
+            return NextResponse.json({ message: 'No matching document found to update' }, { status: 400 });
         }
 
-        return new Response(
-            JSON.stringify({ message: 'Update successful', response: myUser }),
-            { status: 200 }
-        );
+        return NextResponse.json({ message: 'Update successful', response: myUser }, { status: 200 })
 
     } catch (error) {
-        console.error('Error updating document:', error);
-        return new Response(
-            JSON.stringify({ message: 'Internal Server Error', error: error.message }),
-            { status: 500 }
-        );
+        return NextResponse.json({ massage: 'no data found', error })
     }
 };
 
@@ -54,8 +42,8 @@ export const DELETE = async (request, { params }) => {
     const deleteCollection = await db.collection('users')
     try {
         const deleteUser = await deleteCollection.deleteOne({ _id: new ObjectId(params.id) })
-        return Response.json({ deleteUser })
+        return NextResponse.json({ deleteUser })
     } catch (error) {
-        console.log(error)
+        return NextResponse.json({ massage: 'no data found', error })
     }
 }

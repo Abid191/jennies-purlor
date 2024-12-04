@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connectdb"
 import { ObjectId } from "mongodb"
+import { NextResponse } from "next/server"
 
 export const POST = async (request) => {
     const newBooking = await request.json()
@@ -7,9 +8,9 @@ export const POST = async (request) => {
     const bookingCollection = await db.collection('booking')
     try {
         const booking = await bookingCollection.insertOne(newBooking)
-        return Response.json({ message: 'insert successfully' }, { status: 200 })
+        return NextResponse.json({ message: 'insert successfully' }, { status: 200 })
     } catch (error) {
-        return Response.json({ message: 'something went wrong' }, { status: 404 })
+        return NextResponse.json({ message: 'something went wrong' }, { status: 404 })
     }
 }
 
@@ -31,31 +32,8 @@ export const PATCH = async (request, { params }) => {
             }
         )
 
-        return Response.json({ message: 'update found', response: resp })
+        return NextResponse.json({ message: 'update found', response: resp })
     } catch (error) {
-        return Response.json({ message: "No Data Found" })
+        return NextResponse.json({massage : 'no data found', error})
     }
 }
-
-// export const PATCH = async (request, { params }) => {
-//     const db = await connectDB()
-//     const updateCollection = db.collection('booking')
-//     const updateDoc = await request.json()
-//     try {
-//         const myBookings = await updateCollection.updateOne({ _id: new ObjectId(params.id)},
-//             {
-//                 $set: {
-//                     ...updateDoc,
-//                     role : 'done',
-//                 }
-//             },
-//             {
-//                 upsert: true
-//             }
-//         )
-//         return Response.json({ massage: 'update found', response: myBookings })
-
-//     } catch (error) {
-//         return Response.json({ message: "No Data Found" })
-//     }
-// }
